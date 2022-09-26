@@ -22,11 +22,11 @@ loadMoreBtn.refs.button.addEventListener('click', onLoagMoreBtn);
 async function onSearch(e) {
     e.preventDefault();
 
-    newsApiService.guery = e.currentTarget.elements.searchQuery.value;
-
-    if (newsApiService.query === '') {
+    if (e.currentTarget.elements.searchQuery.value.trim() === '') {
         return console.warn('Field cannot be emply');
     };
+
+    newsApiService.guery = e.currentTarget.elements.searchQuery.value;
 
     loadMoreBtn.show();
     loadMoreBtn.disable();
