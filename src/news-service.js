@@ -1,31 +1,51 @@
-const API_KEY = '30037400-a9b9f26d9bfcaaa08a678cbf5';
-const BASE_URL = 'https://pixabay.com/api/';
-const options = {
-            headers: {
-                Authorization: '30037400-a9b9f26d9bfcaaa08a678cbf5',
-            },
-};
-        
+import axios from "axios";
+    
 export default class NewApiService{
     constructor() {
         this.searchQuery = '';
         this.page = 1;
+        this.per_page = 40;
     }
         
-    fetchImages() {
-        const url = `${BASE_URL}?key=30037400-a9b9f26d9bfcaaa08a678cbf5&q=${this.searchQuery}&image_type=photo&orientation=horizontal&safesearch=true&page=${this.page}&per_page=40`
+    async fetchImages() {
+        const apiInstance = axios.create({
+            baseURL: 'https://pixabay.com/api/',
+            params: {
+                key: '30037400-a9b9f26d9bfcaaa08a678cbf5',
+                q: `${this.searchQuery}`,
+                image_type: 'photo',
+                orientation: 'horizontal',
+                safesearch: 'true',
+                page: `${this.page}`,
+                per_page: `${this.per_page}`,
+            },
+        });
+        
+        const { data } = await apiInstance.get();
+        
+        this.incrementPage();
+        
+        const images = data.hits;
+        const totalHits = data.totalHits;
+        const totalPages = totalHits / this.per_page;
 
-        return fetch(url)
-            .then(response => {
-                if (!response.ok) {
-                    throw new Error(response.status);
-                }
-                return response.json();
-            })
-            .then(data => {
-                this.incrementPage();
-                return data.hits;
-            }); 
+        if (!images.length) {
+            throw new Error(`Images not found...`)
+        }
+    
+        return { images, totalHits, totalPages };
+
+        // return fetch(url)
+        // .then(response => {
+        //     if (!response.ok) {
+        //         throw new Error(response.status);
+        //     }
+        //     return response.json();
+        // })
+        // .then(data => {
+        //     this.incrementPage();
+        //     return data.hits;
+        // }); 
     } 
 
     incrementPage() {
