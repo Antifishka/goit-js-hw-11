@@ -3,6 +3,8 @@ import NewApiService from "./news-service";
 import LoadMoreBtn from './load-more-btn';
 import axios from "axios";
 import Notiflix from 'notiflix';
+import SimpleLightbox from "simplelightbox";
+import "simplelightbox/dist/simple-lightbox.min.css";
 
 const refs = {
     searchForm: document.querySelector('#search-form'),
@@ -37,6 +39,7 @@ async function onSearch(e) {
         Notiflix.Notify.success(`Hooray! We found ${images.totalHits} images.`);
         clearGalleryContainer();
         appendImagesMarkup(images);
+        lightbox.refresh();
         loadMoreBtn.enable();
     } catch (error) {
         onFetchError();
@@ -56,6 +59,7 @@ async function onLoagMoreBtn() {
         }
 
         appendImagesMarkup(images);
+        lightbox.refresh();
         loadMoreBtn.enable();
     } catch (error) {
         onFetchError();
@@ -81,3 +85,9 @@ function clearGalleryContainer() {
 function onFetchError(error) {
     Notiflix.Notify.failure('Sorry, there are no images matching your search query. Please try again.');
 }
+
+let lightbox = new SimpleLightbox('.gallery a', {
+    captionsData: 'alt',
+    captionPosition: 'bottom',
+    captionDelay: 250,
+});
