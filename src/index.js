@@ -39,6 +39,7 @@ async function onSearch(e) {
         Notiflix.Notify.success(`Hooray! We found ${images.totalHits} images.`);
         clearGalleryContainer();
         appendImagesMarkup(images);
+        smoothPageScrolling();
         lightbox.refresh();
         loadMoreBtn.enable();
     } catch (error) {
@@ -59,6 +60,7 @@ async function onLoagMoreBtn() {
         }
 
         appendImagesMarkup(images);
+        smoothPageScrolling();
         lightbox.refresh();
         loadMoreBtn.enable();
     } catch (error) {
@@ -91,3 +93,14 @@ let lightbox = new SimpleLightbox('.gallery a', {
     captionPosition: 'bottom',
     captionDelay: 250,
 });
+
+function smoothPageScrolling() {
+   const { height: cardHeight } = document
+    .querySelector(".gallery")
+    .firstElementChild.getBoundingClientRect();
+
+    window.scrollBy({
+    top: cardHeight * 2,
+    behavior: "smooth",
+    }); 
+}
