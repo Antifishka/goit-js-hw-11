@@ -13,20 +13,24 @@ export default class LoadMoreBtn {
         return refs;
     }
 
+    //кнопка активная
     enable() {
         this.refs.button.disabled = false;
         this.refs.label.textContent = 'Show more';
     }
-
+    
+    //кнопка неактивная
     disable() {
         this.refs.button.disabled = true;
         this.refs.label.textContent = 'Loading...';
     }
 
+    //кнопку показать
     show() {
         this.refs.button.classList.remove('is-hidden');
     }
 
+    //кнопку скрыть
     hide() {
         this.refs.button.classList.add('is-hidden'); 
     }

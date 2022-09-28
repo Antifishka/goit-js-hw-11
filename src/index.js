@@ -54,7 +54,7 @@ async function onLoagMoreBtn() {
         const totalPages = images.totalPages;
 
         console.log(newsApiService.page);
-        if (newsApiService.page > totalPages) {
+        if (newsApiService.page > (totalPages+1)) {
             loadMoreBtn.hide();
             return Notiflix.Notify.warning("We're sorry, but you've reached the end of search results.");
         }
