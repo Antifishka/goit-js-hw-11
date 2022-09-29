@@ -23,8 +23,6 @@ export default class NewApiService{
         
         const { data } = await apiInstance.get();
         
-        this.incrementPage();
-        
         const images = data.hits;
         const totalHits = data.totalHits;
         const totalPages = totalHits / this.per_page;
@@ -34,18 +32,6 @@ export default class NewApiService{
         }
     
         return { images, totalHits, totalPages };
-
-        // return fetch(url)
-        // .then(response => {
-        //     if (!response.ok) {
-        //         throw new Error(response.status);
-        //     }
-        //     return response.json();
-        // })
-        // .then(data => {
-        //     this.incrementPage();
-        //     return data.hits;
-        // }); 
     } 
 
     incrementPage() {

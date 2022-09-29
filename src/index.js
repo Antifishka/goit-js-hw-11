@@ -36,6 +36,7 @@ async function onSearch(e) {
     try {
         const images = await newsApiService.fetchImages();
         console.log(images);
+        console.log(newsApiService.page);
         Notiflix.Notify.success(`Hooray! We found ${images.totalHits} images.`);
         clearGalleryContainer();
         appendImagesMarkup(images);
@@ -110,11 +111,15 @@ function onEntry (entries) {
                 const images = await newsApiService.fetchImages();
                 const totalPages = images.totalPages;
 
-                console.log(newsApiService.page);
-                if (newsApiService.page > (totalPages+1)) {
+                newsApiService.incrementPage();
+                
+                if (newsApiService.page > (totalPages + 1)) {
+                    console.log('Закончились картинки');
+
                     return Notiflix.Notify.warning("We're sorry, but you've reached the end of search results.");
                 };
-
+                
+                console.log(newsApiService.page);
                 appendImagesMarkup(images);
                 smoothPageScrolling();
                 lightbox.refresh();
