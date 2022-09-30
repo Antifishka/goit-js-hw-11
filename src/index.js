@@ -17,6 +17,7 @@ const newsApiService = new NewApiService();
 //     selector: '.load-more',
 //     hidden: true,
 // });
+let totalPages = null;
 
 refs.searchForm.addEventListener('submit', onSearch);
 // loadMoreBtn.refs.button.addEventListener('click', onLoagMoreBtn); //если есть кнопка LOAD MORE
@@ -35,6 +36,7 @@ async function onSearch(e) {
     newsApiService.resetPage();
     try {
         const images = await newsApiService.fetchImages();
+        totalPages = images.totalPages;
         console.log(images);
         console.log(newsApiService.page);
         Notiflix.Notify.success(`Hooray! We found ${images.totalHits} images.`);
@@ -46,7 +48,7 @@ async function onSearch(e) {
     } catch (error) {
         onFetchError();
     };
-    return newsApiService.guery;
+    return totalPages;
 }
 
 // Логика работы кнопки LOAD MORE
@@ -103,21 +105,20 @@ function smoothPageScrolling() {
 }
 
 // Бесконечный скрол
-function onEntry (entries) {
+function onEntry(entries) {
     entries.forEach(async (entry) => {
         if (entry.isIntersecting && newsApiService.guery !== '') {
             console.log('Пора грузить еще картинки');
+            newsApiService.incrementPage();
+            
+            if (newsApiService.page > (totalPages + 1)) {
+                console.log('Закончились картинки');
+
+                return Notiflix.Notify.warning("We're sorry, but you've reached the end of search results.");
+            };
+            
             try {
                 const images = await newsApiService.fetchImages();
-                const totalPages = images.totalPages;
-
-                newsApiService.incrementPage();
-                
-                if (newsApiService.page > (totalPages + 1)) {
-                    console.log('Закончились картинки');
-
-                    return Notiflix.Notify.warning("We're sorry, but you've reached the end of search results.");
-                };
                 
                 console.log(newsApiService.page);
                 appendImagesMarkup(images);
